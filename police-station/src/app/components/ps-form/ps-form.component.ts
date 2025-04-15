@@ -1,30 +1,32 @@
+ 
 import { Component } from '@angular/core';
 import { PsService } from '../../services/ps-service.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { CommonModule, NgFor } from '@angular/common';
+ 
 @Component({
   selector: 'app-ps-form',
   imports: [MatSelectModule,MatSelectModule, MatInputModule,
-    MatFormFieldModule,RouterLink,
-    MatDatepickerModule
+    MatFormFieldModule,
+    MatDatepickerModule,FormsModule,NgFor,CommonModule
   ],
   templateUrl: './ps-form.component.html',
-  styleUrl: './ps-form.component.sass',
-  providers : [PsService]
+  styleUrl: './ps-form.component.css',
+  providers : [PsService,provideNativeDateAdapter()]
 })
 export class PsFormComponent {
-
+ 
   loading = false;
   dropownForm! : FormGroup;
   states : any[] = [];
   districts : any[] = [];
   places : any[] = [];
-  
   ps: any = {
     ps_cd: 0,
     ps_name: '',
@@ -36,27 +38,38 @@ export class PsFormComponent {
     instantiated_dttm: null,
     validity_dttm: null
   }
-
+ 
+  parsedInteger : number =0;
   isEditMode : Boolean = false;
-
+ 
   constructor(private psService : PsService,
     private route : ActivatedRoute,
     private router : Router,
-    private formBuilder : FormBuilder
+    private formBuilder : FormBuilder,
   ){}
-
+ 
   ngOnInit(): void {
-      const id = this.route.snapshot.paramMap.get('ps_cd');
-
+      const id = this.route.snapshot.paramMap.get('id');
+ 
       if (id) {
         this.isEditMode = true;
+        this.disableI=true;
+        console.log(id);
+        this.parsedInteger=parseInt(id);
+        console.log("After parsing="+this.parsedInteger);
         this.psService.getPSbyId(parseInt(id)).subscribe(
           (res)=>{
             this.ps=res;
+            console.log(id);
           }
         )
       }
+      else{
+        this.disableM=true;
+      }
+      console.log(this.ps);
 
+ 
       this.dropownForm = this.formBuilder.group(
         {
           state : [null],
@@ -68,15 +81,9 @@ export class PsFormComponent {
   }
   private getAllStates(){
     this.loading = true;
-
     this.psService.getAllStates().subscribe(
-      (res)=>{
-        console.log(res);
-        this.states = res;
-        this.loading = false;
-      },
-      (Error)=>{
-        console.log('Something fishy',Error);
+      (res : any)=>{this.states=res;
+        this.loading=false;
       }
     )
   }
@@ -88,56 +95,53 @@ export class PsFormComponent {
       this.places = [];
       return;
     }
-
+ 
     this.loading = true;
     const state_cd = parseInt(state);
     this.psService.getDistrictsByStates(state_cd).subscribe(
-      (res)=>{
+      (res : any)=>{
         this.districts = res;
         this.loading=false;
-      },
-      (Error)=>{
-        console.log('Something wrong',Error);
-      }
+        console.log(this.districts);
+        }
     )
   }
-
+ 
   selectDistrict(district : any){
     if (!district){
       this.dropownForm.controls['place'].setValue('');
       this.districts = [];
       return;
     }
-
+ 
     this.loading = true;
     const district_cd = parseInt(district);
     this.psService.getPlacesByDistricts(district_cd).subscribe(
-      (res)=>{
-        this.districts = res;
+      (res : any)=>{
+        this.places = res;
         this.loading=false;
-      },
-      (Error)=>{
-        console.log('Something wrong',Error);
       }
     )
   }
+  disableM:boolean=false;
+  disableI:boolean=false;
   savePS(){
     if (this.isEditMode) {
-      this.ps.instantiated_dttm = null;
-      this.ps.instantiated_by = null;
       this.ps.modified_dttm = new Date();
+      this.disableI=true;
       this.psService.updatePS(this.ps.ps_cd,this.ps).subscribe(
         ()=>this.router.navigate(['/ps-list'])
       );
-      
     } else {
       this.ps.modified_dttm = null;
       this.ps.modified_by = null;
+      this.disableM=true;
       this.ps.instantiated_dttm = new Date();
+      this.ps.validity_dttm = null;
       this.psService.createPS(this.ps).subscribe(
         ()=>this.router.navigate(['/ps-list'])
       );
     }
   }
-
+ 
 }
