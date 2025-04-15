@@ -1,0 +1,77 @@
+<div class="example-button-container">
+    <a mat-fab extended routerLink="/ps-form">
+        <mat-icon>add</mat-icon>
+        Add Police Station Details
+    </a>
+</div>
+<div class="container">
+    <table mat-table [dataSource]="psItems" class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="ps_cd">
+            <th mat-header-cell *matHeaderCellDef> PS cd </th>
+            <td mat-cell *matCellDef="let element"> {{element.ps_cd}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ps_name">
+            <th mat-header-cell *matHeaderCellDef> PS name </th>
+            <td mat-cell *matCellDef="let element"> {{element.ps_name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state_cd">
+            <th mat-header-cell *matHeaderCellDef> State cd </th>
+            <td mat-cell *matCellDef="let element"> {{element.state_cd}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="district_cd">
+            <th mat-header-cell *matHeaderCellDef> District cd </th>
+            <td mat-cell *matCellDef="let element"> {{element.district_cd}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="place_of_ps">
+            <th mat-header-cell *matHeaderCellDef> PS place </th>
+            <td mat-cell *matCellDef="let element"> {{element.place_of_ps}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modified_by">
+            <th mat-header-cell *matHeaderCellDef> Modified by </th>
+            <td mat-cell *matCellDef="let element"> {{element.modified_by}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modified_dttm">
+            <th mat-header-cell *matHeaderCellDef> Modified dttm </th>
+            <td mat-cell *matCellDef="let element"> {{element.modified_dttm}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="instantiated_by">
+            <th mat-header-cell *matHeaderCellDef> Instantiated by </th>
+            <td mat-cell *matCellDef="let element"> {{element.instantiated_by}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="instantiated_dttm">
+            <th mat-header-cell *matHeaderCellDef> Instantiated dttm </th>
+            <td mat-cell *matCellDef="let element"> {{element.instantiated_dttm}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="validity_dttm">
+            <th mat-header-cell *matHeaderCellDef> Validity dttm </th>
+            <td mat-cell *matCellDef="let element"> {{element.validity_dttm}} </td>
+        </ng-container>
+
+        <ng-container>
+            <th mat-header-cell *matHeaderCellDef>
+                UPDATE/REMOVE
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <button [routerLink]="['/edit-ps-form',row.ps_cd]" class="btn btn-info btn-sm">Edit</button>
+                <button (click)="deleteProduct(row.ps_cd)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

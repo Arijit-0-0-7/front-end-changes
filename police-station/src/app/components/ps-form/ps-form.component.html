@@ -1,0 +1,92 @@
+<div class="container">
+    <div class="card">
+        <div>
+            <a routerLink="/" class="btn btn-secondary m-2">LOAD EMPLOYEES</a>
+            <h3>{{isEditMode ? 'Edit PS details' : 'Add PS details'}}</h3>
+        </div>
+        <div class="card-body">
+            <form {ngSubmit}="savePS()">
+                <mat-form-field>
+                    <mat-label>Police Station Code</mat-label>
+                    <input matInput disabled [(ngModel)="ps.ps_cd"]>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Police Station Name</mat-label>
+                    <input matInput [(ngModel)="ps.ps_name"]>
+                </mat-form-field>
+                
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>State Code</mat-label>
+                        <mat-select disableRipple formControlName="State" [(ngModel)="ps.state_cd"] (valueChange)="selectState($event)">
+                            <mat-option value="">Select</mat-option>
+                            <mat-option *ngFor="let state of states" [value]="ps.state_cd"
+                                [attr.data-country-name]="state.state_cd">{{ state.state_cd }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div class="p-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>District Code</mat-label>
+                            <mat-select disableRipple formControlName="district" [(ngModel)="ps.district_cd"] (valueChange)="selectDistrict($event)">
+                                <mat-option value="">Select</mat-option>
+                                <mat-option *ngFor="let district of districts" [value]="district.district_cd"
+                                    [attr.data-state-name]="district.district_cd">{{district.district_cd}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="p-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Place</mat-label>
+                            <mat-select disableRipple formControlName="place" [(ngModel)="ps.place_of_ps"] >
+                                <mat-option value="">Select</mat-option>
+                                <mat-option *ngFor="let place of places" [value]="place.place_of_ps"
+                                    [attr.data-city-name]="place.place_of_ps">{{place.place_of_ps}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <mat-form-field>
+                    <mat-label>Instantiated By</mat-label>
+                    <input matInput [(ngModel)="ps.instantiated_by"]>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Instatiated_dttm</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker [(ngModel)="ps.instantiated_dttm"]></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Modified By</mat-label>
+                    <input matInput [(ngModel)="ps.moddified_by"]>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Modified Dttm</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker [(ngModel)="ps.modified_dttm"]></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Validity_dttm</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker">
+                        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker [(ngModel)="ps.validity_dttm"]></mat-datepicker>
+                </mat-form-field>
+                <button type="submit" class="btn btn-primary">{{isEditMode ? 'Update' : 'Save'}}</button>
+                <a routerLink="/" class="btn btn-secondary m-2">LOAD EMPLOYEES</a>
+            </form>
+        </div>
+    </div>
+</div>
