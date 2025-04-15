@@ -25,7 +25,7 @@ export class PsListComponent {
       this.psItems = data;
     });
   }
-  deleteProduct(id: ) {
+  deleteProduct(id: number) {
     this.productService.deletePS(id).subscribe(() => {
       this.psItems = this.psItems.filter(
         product => product.id !== id);
